@@ -1,48 +1,12 @@
 import { useState } from "react";
 import { data } from "./data";
-import logo from "./images/logo.svg";
-import { AiOutlineShoppingCart } from "react-icons/ai";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
-import avatar from "./images/image-avatar.png";
 import minus from "./images/icon-minus.svg";
 import plus from "./images/icon-plus.svg";
-
-function Header() {
-  return (
-    <>
-      <header className="flex items-center justify-between p-8 border-b border-slate-400 max-w-7xl mx-auto">
-        <div className="flex items-center justify-start gap-4">
-          <img src={logo} alt="" />
-
-          <nav className="hidden">
-            <ul className="flex items-center justify-start gap-4">
-              <li>Collections</li>
-              <li>Men</li>
-              <li>Women</li>
-              <li>About</li>
-              <li>Contact</li>
-            </ul>
-          </nav>
-        </div>
-
-        <div>
-          <ul className="flex items-center justify-start gap-4">
-            <li>
-              <button>
-                <AiOutlineShoppingCart />
-              </button>{" "}
-            </li>
-            <li>
-              <img src={avatar} alt="" className="w-12" />{" "}
-            </li>
-          </ul>
-        </div>
-      </header>
-    </>
-  );
-}
-
+import Header from './components/Header'
+import Lightbox from './components/Lightbox'
 
 
 
@@ -51,6 +15,7 @@ function App() {
   const [value, setValue] = useState(0);
   const [amount, setAmount] = useState(0);
   const [slideIndex, setSlideIndex] = useState(1);
+  const [showLightbox, setShowLightbox] = useState(false);
 
   const { mainImage } = products[value];
 
@@ -78,9 +43,18 @@ function App() {
     <>
       {" "}
       <Header />
+      {showLightbox && (
+        <Lightbox
+          products={products}
+          slideIndex={slideIndex}
+          nextSlide={nextSlide}
+          previousSlide={previousSlide}
+          setShowLightbox={setShowLightbox}
+        />
+      )}
       <section className="max-w-7xl mx-auto grid grid-cols-1 lg:place-items-center lg:grid-cols-2 gap-10 lg:py-20 ">
         <article>
-          <div>
+          <div className="lg:hidden">
             {products.map((item, index) => (
               <div
                 key={index}
@@ -89,8 +63,10 @@ function App() {
                 <img
                   src={item.mainImage}
                   alt=""
-                  className="lg:rounded-2xl w-full"
+                  className="lg:rounded-2xl cursor-pointer w-full"
+                  onClick={() => setShowLightbox(true)}
                 />
+
                 <ul className="lg:hidden">
                   <li>
                     <button
@@ -111,6 +87,15 @@ function App() {
                 </ul>
               </div>
             ))}
+          </div>
+
+          <div className="lg:block hidden">
+            <img
+              src={mainImage}
+              alt=""
+              className="lg:rounded-2xl cursor-pointer w-full"
+              onClick={() => setShowLightbox(true)}
+            />
           </div>
 
           <ul className="hidden lg:flex items-center justify-start gap-5 mt-5 flex-wrap">
